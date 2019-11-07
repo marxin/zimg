@@ -29,7 +29,7 @@ extern "C" {
  */
 #define ZIMG_MAKE_API_VERSION(x, y) (((x) << 8) | (y))
 #define ZIMG_API_VERSION_MAJOR 2
-#define ZIMG_API_VERSION_MINOR 3
+#define ZIMG_API_VERSION_MINOR 4
 #define ZIMG_API_VERSION ZIMG_MAKE_API_VERSION(ZIMG_API_VERSION_MAJOR, ZIMG_API_VERSION_MINOR)
 
 /**
@@ -212,6 +212,15 @@ typedef enum zimg_color_family_e {
 } zimg_color_family_e;
 
 /**
+ * Alpha channel constants.
+ */
+typedef enum zimg_alpha_type_e {
+	ZIMG_ALPHA_NONE          = 0, /**< No alpha channel. */
+	ZIMG_ALPHA_STRAIGHT      = 1, /**< Straight alpha. */
+	ZIMG_ALPHA_PREMULTIPLIED = 2  /**< Premultiplied alpha. */
+} zimg_alpha_type_e;
+
+/**
  * Field parity constants.
  *
  * It is possible to process interlaced images with the library by separating
@@ -389,7 +398,7 @@ typedef struct zimg_image_buffer_const {
 		const void *data; /**< Plane data buffer */
 		ptrdiff_t stride; /**< Plane stride in bytes */
 		unsigned mask;    /**< Plane row index mask */
-	} plane[3];
+	} plane[4];
 } zimg_image_buffer_const;
 
 /**
@@ -404,7 +413,7 @@ typedef struct zimg_image_buffer {
 		void *data;       /**< Plane data buffer */
 		ptrdiff_t stride; /**< Plane stride in bytes */
 		unsigned mask;    /**< Plane row index mask */
-	} plane[3];
+	} plane[4];
 } zimg_image_buffer;
 
 /**
@@ -558,6 +567,8 @@ typedef struct zimg_image_format {
 		double width;  /**< Subpixel width, counting from {@link left} (default NAN, same as image width). */
 		double height; /**< Subpixel height, counting from {@link top} (default NAN, same as image height). */
 	} active_region;
+
+	zimg_alpha_type_e alpha;                                  /**< Alpha channel (default ZIMG_ALPHA_NONE). Since API 2.4. */
 } zimg_image_format;
 
 /**
